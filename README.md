@@ -96,15 +96,7 @@ recipe-management-system/
 
 ---
 
-## Screenshots 📸
 
-### Home Page
-![Home Page](assets/screenshots/homepage.png)
-
-### Recipe List
-![Recipe List](assets/screenshots/recipe-list.png)
-
----
 
 ## Contributing 🤝
 
