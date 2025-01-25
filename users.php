@@ -3,125 +3,6 @@
 error_reporting(0);
 include("../connection/connect.php");
 
- $sql = "DELETE FROM recipes WHERE rid='$_GET[id]'";                //query to delete by 'id' which get from while loop
-mysqli_query($db,$sql);
-
-
-
-
- 
-
-
-
-if(isset($_POST['submit']))           //if upload btn is pressed
-{
-	
-			
-		$disc = $_POST['disc']; 
-		
-		  
-		
-		if(!$respname=''||!$disc==''||!$fnew=='')
-		{	
-										$sec= 	'<div class="alert alert-error alert-block">
-													<a class="close" data-dismiss="alert" href="#">&times;</a>
-													<h4 class="alert-heading">Error!</h4>
-												All fields must be required
-									
-												</div>';
-									
-		
-								
-		}
-	else
-		{
-		
-								$fname = $_FILES['file']['name'];
-								$temp = $_FILES['file']['tmp_name'];
-								$fsize = $_FILES['file']['size'];
-								$extension = explode('.',$fname);
-								$extension = strtolower(end($extension));  
-								$fnew = uniqid().'.'.$extension;
-   
-								$store = "img/".basename($fnew);                      // the path to store the upload image
-	
-					if($extension == 'jpg'||$extension == 'png'||$extension == 'gif' )
-					{        
-									if($fsize>=1000000)
-										{
-		
-		
-												$first= 	'<div class="alert alert-error alert-block">
-															<a class="close" data-dismiss="alert" href="#">&times;</a>
-															<h4 class="alert-heading">Error!</h4>
-														Maximum upload size is 1Mb 
-									
-															</div>';
-	   
-										}		
-									else
-										{
-												$respname = $_POST['recipyname'];
-												  
-												
-												
-												move_uploaded_file($temp, $store);
-				
-												$sql = "INSERT INTO recipes(rimage,resname,rtext) VALUES('$fnew','$respname','$disc')";  // store the submited data ino the database :images
-												mysqli_query($db, $sql); 
-	          
-			  
-												$q=	'<div class="alert alert-success">
-													<button type="button" class="close" data-dismiss="alert">&times;</button>
-														<h4>Success</h4>
-															The Record Inserted successfully
-							
-													</div>';
-                
-			   
-			
-			
-			 
-					
-				
-	   
-		
-	
-										}
-					}
-						
-	    }
-
-
-
-	
-	
-	
-
-}
-
-
-
-
-			
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ?>
 <!DOCTYPE html>
 <html class="no-js">
@@ -192,21 +73,22 @@ if(isset($_POST['submit']))           //if upload btn is pressed
             <div class="row-fluid">
                 <div class="span3" id="sidebar">
                     <ul class="nav nav-list bs-docs-sidenav nav-collapse collapse">
-                        <li >
+                          <li >
                             <a href="dashboard.php"><i class="icon-chevron-right"></i> Dashboard</a>
                         </li>
-                        <li class="active">
+                        <li>
                             <a href="recipes.php"><i class="icon-chevron-right"></i> Recipes</a>
                         </li>
                         <li>
                             <a href="detail.php"><i class="icon-chevron-right"></i>Detail Recipes</a>
                         </li>
-						 <li >
+						 <li class="active">
                             <a href="users.php"><i class="icon-chevron-right"></i>users</a>
                         </li>
 						<li>
                             <a href="comment.php"><i class="icon-chevron-right"></i>Comments</a>
                         </li>
+                       
                        
                     </ul>
                 </div>
@@ -215,17 +97,7 @@ if(isset($_POST['submit']))           //if upload btn is pressed
                 <div class="span9" id="content">
                     <div class="row-fluid">
 					
-					  <?php 
-				    echo  $first;
-					 echo  $sec;
-					 echo  $th;
 					
-					
-				   
-					echo   $q;
-					 
-				  
-				  ?>
                         
                         	<div class="navbar">
                             	<div class="navbar-inner">
@@ -236,7 +108,7 @@ if(isset($_POST['submit']))           //if upload btn is pressed
 	                                        <a href="#">Dashboard</a> <span class="divider">/</span>	
 	                                    </li>
 	                                    <li class="active">
-	                                        <a href="#">Recipes</a>
+	                                        <a href="#">Users</a>
 	                                    </li>
 	                                   
 	                                    
@@ -251,47 +123,72 @@ if(isset($_POST['submit']))           //if upload btn is pressed
                         <!-- block -->
                         <div class="block">
                             <div class="navbar navbar-inner block-header">
-                                <div class="muted pull-left">Recipes Table</div>
+                                <div class="muted pull-left">Users Table</div>
                             </div>
                             <div class="block-content collapse in">
                                 <div class="span12">
   									<table class="table table-bordered">
 						              <thead>
 						                <tr>
-						                   <th>recipe ID </th>
-						                  <th>Image</th>
-						                  <th>Recipe Name</th>
-						                  <th>Discription</th>
-										   <th>operation</th>
+						                  <th>#user ID</th>
+                      <th>First Name</th>
+                      <th>Last Name</th>
+                      <th>Username/Email</th>
+                      <th>Password</th>
+                     
+                      <th>Delete</th>
 						                </tr>
 						              </thead>
 						              <tbody>
 									  
-	<?php                                                                          //for printing the  text
-    
-    $sql = "SELECT * FROM recipes ORDER BY rid DESC";
-	 $result = mysqli_query($db, $sql);
-while($row = mysqli_fetch_array($result))
-{
 	
-       $rid =$row['rid'];
-	    $rimage =$row['rimage'];
-		 $rnames =$row['resname'];
-		  $rtext =$row['rtext'];
-		  
-									echo	'<tr>';
-						             echo    " <td>".$rid ."</td>";
-						             echo     " <td>".$rimage ."</td>";
-						             echo     " <td>".$rnames ."</td>";
-						             echo    " <td>".$rtext ."</td>";
-									echo	'   <td><a class="btn btn-danger" href=recipes.php?id='.$row['rid'].'><i class="icon-remove icon-white"></i> Delete</a></td>';
-									
-									
-						              echo  '</tr>';
-	   
-}
-?>								  
-									  
+					<?php                                                                          //for printing the  text
+                    
+						$akl = "DELETE FROM signup WHERE user_id='$_GET[del]' order by user_id desc";                //query to delete by 'id' which get from while loop
+						mysqli_query($db,$akl);
+					  
+							
+					  
+						$sql = "SELECT * FROM signup order by user_id desc";
+						$result = mysqli_query($db, $sql);
+						while($row = mysqli_fetch_array($result))
+							{
+	
+									$user_id =$row['user_id'];
+									$firstname =$row['firstname'];
+									$lastname =$row['lastname'];
+									$email =$row['email'];
+									$password =$row['password'];
+
+	
+                           echo '<tr>
+									<td>'.$user_id.'</td>
+									<td>'.$firstname.'</td>
+									<td>'.$lastname.'</td>
+									<td>'.$email.'</td>
+									<td>'.$password.'</td>
+
+                    
+									<td><a href=users.php?del='.$user_id.' class="btn btn-link">Delete</a></td>
+								</tr>';
+						   
+
+
+							}	
+
+    
+
+					?>
+					  
+				  
+				  
+				  
+				  
+				  
+				  
+                    
+                  
+                    
 									  
 									  
 									  
@@ -313,85 +210,14 @@ while($row = mysqli_fetch_array($result))
 					
 					
 					
-					   <div class="row-fluid">
-                        <!-- block -->
-                        <div class="block">
-                            <div class="navbar navbar-inner block-header">
-                                <div class="muted pull-left">Add a new Record</div>
-                            </div>
-                            <div class="block-content collapse in">
-                                <div class="span12">
-								
-								
-                                    <form class="form-horizontal" action='' method='post'  enctype="multipart/form-data">
-                                      <fieldset>
-                                        <legend>ADD Recipes  </legend>
-										
-										 <div class="control-group">
-                                          <label class="control-label" for="fileInput"  >File input</label>
-                                          <div class="controls">
-										  
-                                            <input class="input-file uniform_on" id="fileInput" type="file"  name="file" >
-                                          
-										  </div>
-                                        </div>
-										
-                                        <div class="control-group">
-                                          <label class="control-label" >Recipe Name </label>
-                                          <div class="controls">
-										  
-                                            <input type="text"  name="recipyname" class="span6" id="typeahead"  data-provide="typeahead" data-items="4" data-source='["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Dakota","North Carolina","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"]'>
-                                             
-                                          </div>
-                                        </div>
-										
-                                       
-                                        <div class="control-group">
-                                          <label class="control-label" for="textarea2">About Recipe</label>
-                                          <div class="controls">
-                                            <textarea class="input-xlarge textarea"  name='disc' placeholder="Enter text ..." style="width: 810px; height: 200px"></textarea>
-                                          </div>
-                                        </div>
-										
-										
-                                        <div class="form-actions">
-                                         <input type='submit' name='submit' value='Add New'class="btn btn-primary"/>
-                                          <button type="reset" class="btn">Cancel</button>
-                                        </div>
-										
-										
-									
-                                      </fieldset>
-                                    </form>
-
-                                </div>
-                            </div>
-                        </div>
-                        <!-- /block -->
-                    </div>
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
+			
 					
 					
                        
             </div>
             <hr>
             <footer>
-                <p>&copy; Navbro 2013</p>
+                <p>&copy; recived 2013</p>
             </footer>
         </div>
        

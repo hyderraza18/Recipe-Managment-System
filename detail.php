@@ -3,7 +3,7 @@
 error_reporting(0);
 include("../connection/connect.php");
 
- $sql = "DELETE FROM recipes WHERE rid='$_GET[id]'";                //query to delete by 'id' which get from while loop
+ $sql = "DELETE FROM full_recipy WHERE rid='$_GET[id]'";                //query to delete by 'id' which get from while loop
 mysqli_query($db,$sql);
 
 
@@ -17,11 +17,17 @@ if(isset($_POST['submit']))           //if upload btn is pressed
 {
 	
 			
-		$disc = $_POST['disc']; 
 		
+		$rtext = $_POST['rtext'];   
+		
+		$ing = $_POST['ing'];   
+		
+		$disc = $_POST['disc'];  
+         $rid = $_POST['rid'];		
+		  
 		  
 		
-		if(!$respname=''||!$disc==''||!$fnew=='')
+		if(!$title=''||!$rtext==''||!$fnew==''||!$ing==''||!$disc==''||!$rid=='')
 		{	
 										$sec= 	'<div class="alert alert-error alert-block">
 													<a class="close" data-dismiss="alert" href="#">&times;</a>
@@ -36,7 +42,7 @@ if(isset($_POST['submit']))           //if upload btn is pressed
 	else
 		{
 		
-								$fname = $_FILES['file']['name'];
+				$fname = $_FILES['file']['name'];
 								$temp = $_FILES['file']['tmp_name'];
 								$fsize = $_FILES['file']['size'];
 								$extension = explode('.',$fname);
@@ -61,13 +67,11 @@ if(isset($_POST['submit']))           //if upload btn is pressed
 										}		
 									else
 										{
-												$respname = $_POST['recipyname'];
-												  
-												
+												$title = $_POST['title'];
 												
 												move_uploaded_file($temp, $store);
-				
-												$sql = "INSERT INTO recipes(rimage,resname,rtext) VALUES('$fnew','$respname','$disc')";  // store the submited data ino the database :images
+				                                 
+												$sql = "INSERT INTO full_recipy(title,title_text,image,ing_text,disc,rid) VALUE('$title','$rtext ','$fnew','$ing','$disc','$rid')";  // store the submited data ino the database :images
 												mysqli_query($db, $sql); 
 	          
 			  
@@ -147,6 +151,9 @@ if(isset($_POST['submit']))           //if upload btn is pressed
             <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
         <script src="vendors/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+	
+	
+	
     </head>
     
     <body>
@@ -195,10 +202,10 @@ if(isset($_POST['submit']))           //if upload btn is pressed
                         <li >
                             <a href="dashboard.php"><i class="icon-chevron-right"></i> Dashboard</a>
                         </li>
-                        <li class="active">
+                        <li>
                             <a href="recipes.php"><i class="icon-chevron-right"></i> Recipes</a>
                         </li>
-                        <li>
+                        <li class="active">
                             <a href="detail.php"><i class="icon-chevron-right"></i>Detail Recipes</a>
                         </li>
 						 <li >
@@ -207,6 +214,7 @@ if(isset($_POST['submit']))           //if upload btn is pressed
 						<li>
                             <a href="comment.php"><i class="icon-chevron-right"></i>Comments</a>
                         </li>
+                       
                        
                     </ul>
                 </div>
@@ -236,7 +244,7 @@ if(isset($_POST['submit']))           //if upload btn is pressed
 	                                        <a href="#">Dashboard</a> <span class="divider">/</span>	
 	                                    </li>
 	                                    <li class="active">
-	                                        <a href="#">Recipes</a>
+	                                        <a href="#"> Detail Recipes</a>
 	                                    </li>
 	                                   
 	                                    
@@ -251,40 +259,50 @@ if(isset($_POST['submit']))           //if upload btn is pressed
                         <!-- block -->
                         <div class="block">
                             <div class="navbar navbar-inner block-header">
-                                <div class="muted pull-left">Recipes Table</div>
+                                <div class="muted pull-left"> Detail Recipes Table</div>
                             </div>
                             <div class="block-content collapse in">
                                 <div class="span12">
   									<table class="table table-bordered">
 						              <thead>
 						                <tr>
-						                   <th>recipe ID </th>
-						                  <th>Image</th>
-						                  <th>Recipe Name</th>
-						                  <th>Discription</th>
-										   <th>operation</th>
+						                  <th>#</th>
+						                  <th>title</th>
+						                  <th>title text</th>
+						                  <th>image</th>
+										   <th>Ingredient text</th>
+										    <th>discription </th>
+											 <th>recipe ID </th>
+											 <th>operation </th>
 						                </tr>
 						              </thead>
 						              <tbody>
 									  
 	<?php                                                                          //for printing the  text
     
-    $sql = "SELECT * FROM recipes ORDER BY rid DESC";
+    $sql = "SELECT * FROM full_recipy ORDER BY id DESC";
 	 $result = mysqli_query($db, $sql);
 while($row = mysqli_fetch_array($result))
 {
-	
+	  $id =$row['id'];
        $rid =$row['rid'];
-	    $rimage =$row['rimage'];
-		 $rnames =$row['resname'];
-		  $rtext =$row['rtext'];
+	    $image =$row['image'];
+		 $title =$row['title'];
+		  $title_text =$row['title_text'];
+		  $ing_text =$row['ing_text'];
+		  $disc =$row['disc'];
+		  
 		  
 									echo	'<tr>';
-						             echo    " <td>".$rid ."</td>";
-						             echo     " <td>".$rimage ."</td>";
-						             echo     " <td>".$rnames ."</td>";
-						             echo    " <td>".$rtext ."</td>";
-									echo	'   <td><a class="btn btn-danger" href=recipes.php?id='.$row['rid'].'><i class="icon-remove icon-white"></i> Delete</a></td>';
+						             echo    " <td>".$id ."</td>";
+						             echo     " <td>".$title ."</td>";
+						             echo     " <td>".$title_text ."</td>";
+						             echo    " <td>".$image ."</td>";
+									   echo     " <td>".$ing_text ."</td>";
+						             echo    " <td>".$disc ."</td>";
+									   echo     " <td>".$rid ."</td>";
+						          
+									echo	'   <td><a class="btn btn-danger" href=detail.php?id='.$row['rid'].'><i class="icon-remove icon-white"></i> Delete</a></td>';
 									
 									
 						              echo  '</tr>';
@@ -325,7 +343,26 @@ while($row = mysqli_fetch_array($result))
 								
                                     <form class="form-horizontal" action='' method='post'  enctype="multipart/form-data">
                                       <fieldset>
-                                        <legend>ADD Recipes  </legend>
+                                        <legend>ADD Recipes in Detail </legend>
+										
+										
+										
+                                        <div class="control-group">
+                                          <label class="control-label" for="typeahead">Recipe Title </label>
+                                          <div class="controls">
+										  
+                                            <input type="text" class="span6" name='title' id="typeahead"  />
+                                           
+                                          </div>
+										  
+                                        </div>
+										
+										 <div class="control-group">
+                                          <label class="control-label" for="textarea2"> Recipe Text</label>
+                                          <div class="controls">
+                                            <textarea class="input-xlarge textarea"  name='rtext' placeholder="Enter text ..." style="width: 810px; height: 200px"></textarea>
+                                          </div>
+                                        </div>
 										
 										 <div class="control-group">
                                           <label class="control-label" for="fileInput"  >File input</label>
@@ -335,24 +372,35 @@ while($row = mysqli_fetch_array($result))
                                           
 										  </div>
                                         </div>
-										
-                                        <div class="control-group">
-                                          <label class="control-label" >Recipe Name </label>
+                                       
+									   <div class="control-group">
+                                          <label class="control-label" for="textarea2">Ingredients</label>
                                           <div class="controls">
-										  
-                                            <input type="text"  name="recipyname" class="span6" id="typeahead"  data-provide="typeahead" data-items="4" data-source='["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Dakota","North Carolina","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"]'>
-                                             
+                                            <textarea class="input-xlarge textarea"  name='ing' placeholder="Enter text ..." style="width: 810px; height: 200px"></textarea>
                                           </div>
                                         </div>
-										
-                                       
-                                        <div class="control-group">
-                                          <label class="control-label" for="textarea2">About Recipe</label>
+									   
+									   
+									   
+                                      
+		                       
+										<div class="control-group">
+                                          <label class="control-label" for="textarea2">About</label>
                                           <div class="controls">
                                             <textarea class="input-xlarge textarea"  name='disc' placeholder="Enter text ..." style="width: 810px; height: 200px"></textarea>
                                           </div>
                                         </div>
+		                      
 										
+										 <div class="control-group">
+                                          <label class="control-label" for="typeahead">Recipe ID(important) </label>
+                                          <div class="controls">
+										  
+                                            <input type="text" class="span6" name='rid' id="typeahead"  data-provide="typeahead" data-items="4" data-source='["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Dakota","North Carolina","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"]'>
+                                          </br>
+										  <p>Please be sure Recipe ID should be the same in Recipe Table.</p>
+                                          </div>
+                                        </div>
 										
                                         <div class="form-actions">
                                          <input type='submit' name='submit' value='Add New'class="btn btn-primary"/>
@@ -452,6 +500,8 @@ while($row = mysqli_fetch_array($result))
             });
         });
         </script>
+		
+
 		
     </body>
 
